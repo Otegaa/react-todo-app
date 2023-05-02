@@ -1,9 +1,12 @@
 import './index.css';
+import Header from './components/Header';
+import TodosLogic from './components/TodosLogic';
 
 function App() {
   return (
     <>
-      <h1>Hi!</h1>
+      <Header />
+      <TodosLogic />
     </>
   );
 }
