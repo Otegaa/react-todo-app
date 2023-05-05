@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import styles from '../styles/TodoItem.module.css';
 import { FaTrash } from 'react-icons/fa';
 import { AiFillEdit } from 'react-icons/ai';
+import { useAuthContext } from '../context/AuthContext';
 
 const TodoItem = ({ todo, handleChange, delTodo, setUpdate }) => {
+  const { user } = useAuthContext();
+
   const { id, title, completed } = todo;
   const [editing, setEditing] = useState(false);
   const [updateInput, setUpdateInput] = useState(title);
@@ -43,9 +46,11 @@ const TodoItem = ({ todo, handleChange, delTodo, setUpdate }) => {
           checked={completed}
           onChange={() => handleChange(id)}
         />
-        <button onClick={editItems}>
-          <AiFillEdit style={{ color: '#5e5e5e', fontSize: '16px' }} />
-        </button>
+        {user && (
+          <button onClick={editItems}>
+            <AiFillEdit style={{ color: '#5e5e5e', fontSize: '16px' }} />
+          </button>
+        )}
         <button onClick={() => delTodo(id)}>
           <FaTrash style={{ color: '#5e5e5e', fontSize: '16px' }} />
         </button>
