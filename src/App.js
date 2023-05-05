@@ -7,6 +7,7 @@ import Profile from './routes/Profile';
 import Error from './routes/Error';
 import Layout from './components/Layout';
 import SinglePage from './routes/SinglePage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -17,7 +18,14 @@ function App() {
           <Route path=":slug" element={<SinglePage />} />
         </Route>
         <Route path="login" element={<Login />} />
-        <Route path="profile" element={<Profile />} />
+        <Route
+          path="profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Error />} />
       </Route>
     </Routes>
