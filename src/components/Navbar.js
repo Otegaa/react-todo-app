@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { links } from './data';
 import { NavLink } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { MdClose } from 'react-icons/md';
+import { FiMenu } from 'react-icons/fi';
 
 const Navbar = () => {
   const { user, logout } = useAuthContext();
+  const [openNavbar, setOpenNavbar] = useState(false);
 
   const navigate = useNavigate();
+
+  const ref = useRef();
+  useEffect(() => {
+    const handler = (e) => {
+      if (openNavbar && ref.current && !ref.current.contains(e.target)) {
+        setOpenNavbar(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener('mousedown', handler);
+    };
+  }, [openNavbar]);
 
   const handleLogout = () => {
     logout();
@@ -15,8 +32,14 @@ const Navbar = () => {
   };
   return (
     <>
-      <nav className="navbar">
-        <ul>
+      <nav ref={ref} className="navbar">
+        <button
+          className="toggle"
+          onClick={() => setOpenNavbar(() => !openNavbar)}
+        >
+          {openNavbar ? <MdClose /> : <FiMenu />}
+        </button>
+        <ul className={`menu-nav${openNavbar ? ' show-menu' : ''}`}>
           {links.map((link) => {
             return (
               <React.Fragment key={link.text}>
@@ -34,7 +57,12 @@ const Navbar = () => {
                   )
                 ) : (
                   <li>
-                    <NavLink to={link.path}>{link.text}</NavLink>
+                    <NavLink
+                      to={link.path}
+                      onClick={() => setOpenNavbar(false)}
+                    >
+                      {link.text}
+                    </NavLink>
                   </li>
                 )}
               </React.Fragment>
